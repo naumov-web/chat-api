@@ -1,0 +1,49 @@
+swagger: "2.0"
+info:
+  title: "Chat API"
+  description: "Docs for Chat API"
+  version: "1.0.0"
+schemes:
+  - "http"
+host: 127.0.0.1:3000
+basePath: /api
+
+paths:
+
+  /v1/auth/random-user:
+    post:
+      tags:
+        - user
+      summary: "Create random user"
+      description: ""
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/RandomUserResponseModel"
+
+definitions:
+
+  # Common models
+
+  SimpleSuccessResponseModel:
+    type: "object"
+    properties:
+      success:
+        type: "boolean"
+      message:
+        type: "string"
+
+  # Generate random user request
+
+  RandomUserResponseModel:
+    type: "object"
+    properties:
+      success:
+        type: "boolean"
+      message:
+        type: "string"
+      token:
+        type: "string"
