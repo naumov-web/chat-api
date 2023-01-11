@@ -22,7 +22,7 @@ services:
       - default-network
 
   mongo:
-    image: mongo
+    image: mongo:latest
     ports:
       - "${DOCKER_MONGO_PORT}:27017"
     environment:

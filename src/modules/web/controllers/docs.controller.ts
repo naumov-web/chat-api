@@ -1,4 +1,4 @@
-import { BaseController } from '../../base/controllers/base.controller';
+import { BaseController } from '../../../base/controllers/base.controller';
 import {Controller, Get, Render} from "@nestjs/common";
 
 @Controller('docs')
