@@ -34,3 +34,4 @@ services:
       - ./deployment/local/mongo/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
     networks:
       - default-network
+    container_name: chat_api_mongo
