@@ -46,8 +46,8 @@ paths:
           description: "Successful operation"
           schema:
             $ref: "#/definitions/RegisterResponseModel"
-        422:
-          description: "Successful operation"
+        400:
+          description: "Bad request"
           schema:
             $ref: "#/definitions/ValidationErrorResponseModel"
 
@@ -64,10 +64,22 @@ definitions:
         type: string
 
   ValidationErrorResponseModel:
-    type: "object"
+    type: object
     properties:
       errors:
-        type: "object"
+        type: array
+        items:
+          $ref: "#/definitions/ValidationErrorItemResponseModel"
+
+  ValidationErrorItemResponseModel:
+    type: object
+    properties:
+      fieldName:
+        type: string
+      errors:
+        type: array
+        items:
+          type: string
 
   # Generate random user request
 

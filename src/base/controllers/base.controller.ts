@@ -7,4 +7,11 @@ export class BaseController {
             message
         };
     }
+
+    getErrorResponse(message: string): SimpleResponseInterface {
+        return {
+            success: false,
+            message
+        };
+    }
 }
