@@ -13,7 +13,7 @@ paths:
   /v1/auth/random-user:
     post:
       tags:
-        - user
+        - auth
       summary: "Create random user"
       description: ""
       produces:
@@ -24,26 +24,95 @@ paths:
           schema:
             $ref: "#/definitions/RandomUserResponseModel"
 
+  /v1/auth/register:
+    post:
+      tags:
+        - auth
+      summary: "Register user"
+      description: "Register user by username and password"
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - name: RegisterRequestBody
+          in: body
+          description: "Register request body"
+          required: true
+          schema:
+            $ref: "#/definitions/RegisterRequestModel"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/RegisterResponseModel"
+        400:
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ValidationErrorResponseModel"
+
 definitions:
 
   # Common models
 
   SimpleSuccessResponseModel:
-    type: "object"
+    type: object
     properties:
       success:
-        type: "boolean"
+        type: boolean
       message:
-        type: "string"
+        type: string
+
+  ValidationErrorResponseModel:
+    type: object
+    properties:
+      errors:
+        type: array
+        items:
+          $ref: "#/definitions/ValidationErrorItemResponseModel"
+
+  ValidationErrorItemResponseModel:
+    type: object
+    properties:
+      fieldName:
+        type: string
+      errors:
+        type: array
+        items:
+          type: string
 
   # Generate random user request
 
   RandomUserResponseModel:
-    type: "object"
+    type: object
     properties:
       success:
-        type: "boolean"
+        type: boolean
       message:
-        type: "string"
+        type: string
       token:
-        type: "string"
+        type: string
+
+  # Register user request
+
+  RegisterRequestModel:
+    type: object
+    required:
+      - username
+      - password
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+
+  RegisterResponseModel:
+    type: object
+    properties:
+      success:
+        type: boolean
+      message:
+        type: string
+      token:
+        type: string
+
