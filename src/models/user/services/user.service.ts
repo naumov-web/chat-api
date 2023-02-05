@@ -32,7 +32,8 @@ export class UserService {
             throw new UsernameAlreadyRegisteredException();
         }
 
-        const hashedPassword = await bcrypt.hash(password, process.env.PASSWORD_SALT);
+        const salt = await bcrypt.genSalt(Number(process.env.PASSWORD_SALT_SIZE));
+        const hashedPassword = await bcrypt.hash(password, salt);
         const user = new User();
         user.username = username;
         user.password = hashedPassword;
@@ -48,10 +49,10 @@ export class UserService {
     }
 
     async isUsernameRegistered(username: string) {
-        const model = this.userRepository.findOne({
+        const model = await this.userRepository.findOne({
             username: username
         });
 
-        return model !== null;
+        return !!model;
     }
 }

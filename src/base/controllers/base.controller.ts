@@ -1,4 +1,5 @@
 import {SimpleResponseInterface} from "../contracts/simple-response.interface";
+import {HttpException, HttpStatus} from "@nestjs/common";
 
 export class BaseController {
     getSuccessResponse(message: string): SimpleResponseInterface {
@@ -8,10 +9,13 @@ export class BaseController {
         };
     }
 
-    getErrorResponse(message: string): SimpleResponseInterface {
-        return {
-            success: false,
-            message
-        };
+    getErrorResponse(message: string, status: HttpStatus = HttpStatus.BAD_REQUEST): SimpleResponseInterface {
+        throw new HttpException(
+            {
+                success: false,
+                message
+            },
+            status
+        );
     }
 }
