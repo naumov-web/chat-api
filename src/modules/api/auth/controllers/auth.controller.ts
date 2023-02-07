@@ -7,12 +7,17 @@ import {RegisterDto} from "../requests/register.dto";
 import {RegisterUserInputDto} from "../../../../use-cases/auth/input/register-user.input.dto";
 import {ValidationPipe} from "../../../../base/pipes/validation.pipe";
 import {RegisterSchema} from "../schemas/register.schema";
+import {LoginSchema} from "../schemas/login.schema";
+import {LoginDto} from "../requests/login.dto";
+import {LoginUserUseCase} from "../../../../use-cases/auth/login-user.use-case";
+import {LoginUserInputDto} from "../../../../use-cases/auth/input/login-user.input.dto";
 
 @Controller('api/v1/auth')
 export class AuthController extends BaseController {
     public constructor(
         private createRandomUserUseCase: CreateRandomUserUseCase,
-        private registerUserUseCase: RegisterUserUseCase
+        private registerUserUseCase: RegisterUserUseCase,
+        private loginUserUseCase: LoginUserUseCase
     ) {
         super();
     }
@@ -46,6 +51,28 @@ export class AuthController extends BaseController {
         return {
             ...this.getSuccessResponse(i18n.userRegisteredSuccessfully),
             token: this.registerUserUseCase.jwt
+        };
+    }
+
+    @Post('login')
+    public async loginUser(
+        @Body(
+            new ValidationPipe(LoginSchema)
+        ) body: LoginDto
+    ) {
+        try {
+            const inputDto = new LoginUserInputDto();
+            inputDto.username = body.username;
+            inputDto.password = body.password;
+            this.loginUserUseCase.setInputDto(inputDto);
+            await this.loginUserUseCase.execute();
+        } catch (exception) {
+            return this.getErrorResponse(i18n.invalidUsernameOrPassword);
+        }
+
+        return {
+            ...this.getSuccessResponse(i18n.userLoggedSuccessfully),
+            token: this.loginUserUseCase.jwt
         };
     }
 }
