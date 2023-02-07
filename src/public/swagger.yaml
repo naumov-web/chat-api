@@ -8,6 +8,13 @@ schemes:
 host: 127.0.0.1:3000
 basePath: /api
 
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
 paths:
 
   /v1/auth/random-user:
@@ -73,6 +80,39 @@ paths:
           description: Successful operation
           schema:
             $ref: "#/definitions/LoginResponseModel"
+        400:
+          description: Bad request
+          schema:
+            $ref: "#/definitions/ValidationErrorResponseModel"
+
+  /v1/account/chats:
+    post:
+      tags:
+        - chats
+      security:
+        - bearerAuth: [ ]
+      summary: Create chat
+      description: Create chat with current user as owner
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: query
+          name: Authorization
+          required: true
+          type: string
+        - name: CreateChatBody
+          in: body
+          description: Create chat request body
+          required: true
+          schema:
+            $ref: "#/definitions/CreateChatRequestModel"
+      responses:
+        201:
+          description: Successful operation
+          schema:
+            $ref: "#/definitions/CreateChatResponseModel"
         400:
           description: Bad request
           schema:
@@ -165,3 +205,26 @@ definitions:
         type: string
       token:
         type: string
+
+  # Create chat request
+
+  CreateChatRequestModel:
+    type: object
+    required:
+      - name
+      - typeId
+    properties:
+      name:
+        type: string
+      typeId:
+        type: integer
+
+  CreateChatResponseModel:
+    type: object
+    properties:
+      success:
+        type: boolean
+      message:
+        type: string
+      chatId:
+        type: integer
