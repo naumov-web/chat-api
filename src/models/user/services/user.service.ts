@@ -6,6 +6,7 @@ import {RandomUsernameGenerator} from '../utils/random-username.generator';
 import {JwtService} from "@nestjs/jwt";
 import * as bcrypt from 'bcrypt';
 import {UsernameAlreadyRegisteredException} from "../exceptions/username-already-registered.exception";
+import {InvalidUsernameOrPasswordException} from "../exceptions/invalid-username-or-password.exception";
 
 @Injectable()
 export class UserService {
@@ -49,10 +50,30 @@ export class UserService {
     }
 
     async isUsernameRegistered(username: string) {
-        const model = await this.userRepository.findOne({
-            username: username
-        });
+        const model = this.getUser(username);
 
         return !!model;
+    }
+
+    async getUser(username: string) {
+        return await this.userRepository.findOne({
+            username: username
+        });
+    }
+
+    async validateUser(username: string, password: string) {
+        const user = await this.getUser(username);
+
+        if (!user) {
+            throw new InvalidUsernameOrPasswordException();
+        }
+
+        const passwordValid = await bcrypt.compare(password, user.password);
+
+        if (!passwordValid) {
+            throw new InvalidUsernameOrPasswordException();
+        }
+
+        return user;
     }
 }

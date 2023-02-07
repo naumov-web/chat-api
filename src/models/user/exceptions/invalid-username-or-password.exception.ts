@@ -1,0 +1,1 @@
+export class InvalidUsernameOrPasswordException extends Error {}

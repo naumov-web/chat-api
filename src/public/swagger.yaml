@@ -14,13 +14,13 @@ paths:
     post:
       tags:
         - auth
-      summary: "Create random user"
-      description: ""
+      summary: Create random user
+      description: Create random user without username and password
       produces:
-        - "application/json"
+        - application/json
       responses:
         200:
-          description: "Successful operation"
+          description: Successful operation
           schema:
             $ref: "#/definitions/RandomUserResponseModel"
 
@@ -28,8 +28,8 @@ paths:
     post:
       tags:
         - auth
-      summary: "Register user"
-      description: "Register user by username and password"
+      summary: Register user
+      description: Register user by username and password
       produces:
         - application/json
       consumes:
@@ -37,17 +37,44 @@ paths:
       parameters:
         - name: RegisterRequestBody
           in: body
-          description: "Register request body"
+          description: Register request body
           required: true
           schema:
             $ref: "#/definitions/RegisterRequestModel"
       responses:
         200:
-          description: "Successful operation"
+          description: Successful operation
           schema:
             $ref: "#/definitions/RegisterResponseModel"
         400:
-          description: "Bad request"
+          description: Bad request
+          schema:
+            $ref: "#/definitions/ValidationErrorResponseModel"
+
+  /v1/auth/login:
+    post:
+      tags:
+        - auth
+      summary: Login user
+      description: Login user by username and password
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - name: LoginRequestBody
+          in: body
+          description: Login request body
+          required: true
+          schema:
+            $ref: "#/definitions/LoginRequestModel"
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            $ref: "#/definitions/LoginResponseModel"
+        400:
+          description: Bad request
           schema:
             $ref: "#/definitions/ValidationErrorResponseModel"
 
@@ -116,3 +143,25 @@ definitions:
       token:
         type: string
 
+  # Login user request
+
+  LoginRequestModel:
+    type: object
+    required:
+      - username
+      - password
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+
+  LoginResponseModel:
+    type: object
+    properties:
+      success:
+        type: boolean
+      message:
+        type: string
+      token:
+        type: string
